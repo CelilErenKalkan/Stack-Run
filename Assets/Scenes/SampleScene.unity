@@ -309,6 +309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1420882758}
+  - component: {fileID: 1420882760}
   - component: {fileID: 1420882757}
   - component: {fileID: 1420882759}
   m_Layer: 0
@@ -366,8 +367,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d478d40b66c9e4aac9cf3ac03a21bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 1
-  zOffset: 1
-  minMatchThreshold: 0.3
-  minAnimSpeed: 0.8
-  maxAnimSpeed: 1.2
+--- !u!114 &1420882760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420882756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083cee68b4403b54e9333636028aac4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

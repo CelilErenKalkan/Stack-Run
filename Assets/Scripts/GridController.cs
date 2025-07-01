@@ -1,24 +1,49 @@
 ﻿using DG.Tweening;
 using Game_Management;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
+    [SerializeField] private Renderer gridRenderer;
+    [SerializeField] private List<Material> materialOptions;
+
     private float matchThreshold = 0.3f;
     private float moveRange = 5.0f;
     private float duration = 3.0f;
     private Tween moveTween;
+    private Tween colorTween;
 
     private bool isActive = false;
     public static bool isInputLocked = false;
 
-    public void Init()
+    public int assignedMaterialIndex = -1;
+
+    public void Init(bool shouldMove = true)
     {
-        isActive = true;
+        isActive = shouldMove;
         isInputLocked = false;
 
-        transform.localScale = new Vector3(1f, 0.2f, 1f); // ✅ Set Y to 0.2f
-        StartMoving();
+        transform.localScale = new Vector3(1f, 0.2f, 1f);
+
+        AssignRandomMaterial();
+
+        if (shouldMove)
+            StartMoving();
+    }
+
+    private void AssignRandomMaterial()
+    {
+        if (materialOptions != null && materialOptions.Count > 0)
+        {
+            assignedMaterialIndex = UnityEngine.Random.Range(0, materialOptions.Count);
+            Material matInstance = Instantiate(materialOptions[assignedMaterialIndex]);
+            gridRenderer.material = matInstance;
+        }
+        else
+        {
+            Debug.LogWarning("Material options list is empty!");
+        }
     }
 
     private void StartMoving()
@@ -46,7 +71,7 @@ public class GridController : MonoBehaviour
 
     private void StopMovement()
     {
-        moveTween.Kill();
+        moveTween?.Kill();
     }
 
     private void HandleClick()
@@ -57,57 +82,28 @@ public class GridController : MonoBehaviour
             return;
         }
 
-        GridData previous = StackSpawner.gridHistory[^1]; // last item
+        GridData previous = StackSpawner.gridHistory[^1];
         float prevX = previous.x;
         float prevScaleX = previous.scaleX;
 
         float currX = transform.position.x;
-        float deltaX = currX - prevX;
-        float absDeltaX = Mathf.Abs(deltaX);
+        float currScaleX = transform.localScale.x;
 
-        if (absDeltaX <= matchThreshold)
+        // Calculate edges of previous and current grids
+        float prevLeft = prevX - prevScaleX / 2f;
+        float prevRight = prevX + prevScaleX / 2f;
+
+        float currLeft = currX - currScaleX / 2f;
+        float currRight = currX + currScaleX / 2f;
+
+        // Calculate overlap edges
+        float overlapLeft = Mathf.Max(prevLeft, currLeft);
+        float overlapRight = Mathf.Min(prevRight, currRight);
+        float overlapWidth = overlapRight - overlapLeft;
+
+        if (overlapWidth <= 0 || overlapWidth < matchThreshold)
         {
-            // ✅ Perfect match: snap position and copy scale
-            Vector3 newPos = transform.position;
-            newPos.x = prevX;
-            transform.position = newPos;
-
-            transform.localScale = new Vector3(prevScaleX, 0.2f, 1f); // ✅ Set Y to 0.2f
-        }
-        else if (absDeltaX < prevScaleX / 2f)
-        {
-            // ✅ Partial match: trim current grid and spawn falling part
-            float newScaleX = prevScaleX - absDeltaX;
-            float direction = Mathf.Sign(deltaX);
-
-            Vector3 scale = transform.localScale;
-            scale.x = newScaleX;
-            scale.y = 0.2f; // ✅ Enforce Y scale
-            transform.localScale = scale;
-
-            Vector3 newPos = transform.position;
-            newPos.x = prevX + deltaX / 2f;
-            transform.position = newPos;
-
-            float fallScaleX = absDeltaX;
-            Vector3 fallPos = transform.position;
-            fallPos.x = prevX + direction * (newScaleX / 2f + fallScaleX / 2f);
-
-            GameObject fallingPart = Pool.Instance.SpawnObject(fallPos, PoolItemType.Grid, null, 3f);
-            if (fallingPart != null)
-            {
-                fallingPart.transform.localScale = new Vector3(fallScaleX, 0.2f, 1f); // ✅ Set Y to 0.2f
-
-                if (fallingPart.TryGetComponent<Rigidbody>(out Rigidbody fallRb))
-                {
-                    fallRb.isKinematic = false;
-                    fallRb.useGravity = true;
-                }
-            }
-        }
-        else
-        {
-            // ❌ Missed completely — let the current grid fall
+            // No or very small overlap → game over: let grid fall
             Debug.Log("Game Over! Grid missed completely.");
 
             if (TryGetComponent<Rigidbody>(out Rigidbody rb))
@@ -115,11 +111,102 @@ public class GridController : MonoBehaviour
                 rb.isKinematic = false;
                 rb.useGravity = true;
             }
-
             return;
         }
 
-        // ✅ Continue to next grid
+        // Perfect overlap (almost equal scale and position)
+        if (Mathf.Abs(currScaleX - overlapWidth) < 0.01f)
+        {
+            // Snap to previous scale and position
+            transform.localScale = new Vector3(prevScaleX, 0.2f, 1f);
+            Vector3 newPos = transform.position;
+            newPos.x = prevX;
+            transform.position = newPos;
+
+            AnimateEmission(true);
+            GameManager.Instance.AddScore(2);
+        }
+        else
+        {
+            // Partial overlap - trim current grid to overlap area
+            transform.localScale = new Vector3(overlapWidth, 0.2f, 1f);
+            Vector3 newPos = transform.position;
+            newPos.x = (overlapLeft + overlapRight) / 2f;
+            transform.position = newPos;
+
+            // Spawn falling parts (left side)
+            float leftTrimWidth = overlapLeft - currLeft;
+            if (leftTrimWidth > 0)
+            {
+                Vector3 fallPos = new Vector3(currLeft + leftTrimWidth / 2f, transform.position.y, transform.position.z);
+                SpawnFallingPart(fallPos, leftTrimWidth);
+            }
+
+            // Spawn falling parts (right side)
+            float rightTrimWidth = currRight - overlapRight;
+            if (rightTrimWidth > 0)
+            {
+                Vector3 fallPos = new Vector3(currRight - rightTrimWidth / 2f, transform.position.y, transform.position.z);
+                SpawnFallingPart(fallPos, rightTrimWidth);
+            }
+
+            GameManager.Instance.AddScore(1);
+        }
+
+        // Record current grid data
+        StackSpawner.gridHistory.Add(new GridData(transform.position.x, transform.position.y, transform.localScale.x, assignedMaterialIndex));
+
         Actions.SetNextGrid?.Invoke(this.gameObject);
+    }
+
+    private void SpawnFallingPart(Vector3 position, float width)
+    {
+        GameObject fallingPart = Pool.Instance.SpawnObject(position, PoolItemType.Grid, null, 3f);
+        if (fallingPart != null)
+        {
+            fallingPart.transform.localScale = new Vector3(width, 0.2f, 1f);
+
+            if (fallingPart.TryGetComponent<Rigidbody>(out Rigidbody fallRb))
+            {
+                fallRb.isKinematic = false;
+                fallRb.useGravity = true;
+            }
+
+            if (fallingPart.TryGetComponent<GridController>(out GridController fallController))
+            {
+                fallController.SetMaterialByIndex(assignedMaterialIndex);
+            }
+        }
+    }
+
+    public void SetMaterialByIndex(int index)
+    {
+        if (materialOptions != null && index >= 0 && index < materialOptions.Count)
+        {
+            assignedMaterialIndex = index;
+            Material matInstance = Instantiate(materialOptions[assignedMaterialIndex]);
+            gridRenderer.material = matInstance;
+        }
+    }
+
+    private void AnimateEmission(bool glow)
+    {
+        if (gridRenderer == null)
+            return;
+
+        Material mat = gridRenderer.material;
+
+        if (!mat.HasProperty("_EmissionColor"))
+            return;
+
+        Color targetColor = glow ? Color.white * 2f : Color.black;
+        if (colorTween != null && colorTween.IsActive()) colorTween.Kill();
+
+        colorTween = DOTween.To(
+            () => mat.GetColor("_EmissionColor"),
+            c => mat.SetColor("_EmissionColor", c),
+            targetColor,
+            0.5f
+        ).SetLoops(glow ? 2 : 1, LoopType.Yoyo);
     }
 }
