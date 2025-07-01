@@ -1,17 +1,23 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using Game_Management;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
     private float matchThreshold = 0.3f;
-    private float moveRange = 10f;
-    private float duration = 1.0f;
+    private float moveRange = 5.0f;
+    private float duration = 3.0f;
     private Tween moveTween;
+
+    private bool isActive = false;
+    public static bool isInputLocked = false;
 
     public void Init()
     {
-        transform.localScale = new Vector3(1f, 1f, 1f);
+        isActive = true;
+        isInputLocked = false;
+
+        transform.localScale = new Vector3(1f, 0.2f, 1f); // ✅ Set Y to 0.2f
         StartMoving();
     }
 
@@ -25,8 +31,14 @@ public class GridController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!isActive || isInputLocked)
+            return;
+
+        if (Input.GetMouseButtonUp(0))
         {
+            isInputLocked = true;
+            isActive = false;
+
             StopMovement();
             HandleClick();
         }
@@ -55,27 +67,28 @@ public class GridController : MonoBehaviour
 
         if (absDeltaX <= matchThreshold)
         {
-            // Perfect or near-perfect match
+            // ✅ Perfect match: snap position and copy scale
             Vector3 newPos = transform.position;
             newPos.x = prevX;
             transform.position = newPos;
+
+            transform.localScale = new Vector3(prevScaleX, 0.2f, 1f); // ✅ Set Y to 0.2f
         }
         else if (absDeltaX < prevScaleX / 2f)
         {
-            // Partial match
+            // ✅ Partial match: trim current grid and spawn falling part
             float newScaleX = prevScaleX - absDeltaX;
             float direction = Mathf.Sign(deltaX);
 
-            // Resize current grid
             Vector3 scale = transform.localScale;
             scale.x = newScaleX;
+            scale.y = 0.2f; // ✅ Enforce Y scale
             transform.localScale = scale;
 
             Vector3 newPos = transform.position;
             newPos.x = prevX + deltaX / 2f;
             transform.position = newPos;
 
-            // Spawn falling part
             float fallScaleX = absDeltaX;
             Vector3 fallPos = transform.position;
             fallPos.x = prevX + direction * (newScaleX / 2f + fallScaleX / 2f);
@@ -83,17 +96,30 @@ public class GridController : MonoBehaviour
             GameObject fallingPart = Pool.Instance.SpawnObject(fallPos, PoolItemType.Grid, null, 3f);
             if (fallingPart != null)
             {
-                fallingPart.transform.localScale = new Vector3(fallScaleX, 1f, 1f);
+                fallingPart.transform.localScale = new Vector3(fallScaleX, 0.2f, 1f); // ✅ Set Y to 0.2f
+
+                if (fallingPart.TryGetComponent<Rigidbody>(out Rigidbody fallRb))
+                {
+                    fallRb.isKinematic = false;
+                    fallRb.useGravity = true;
+                }
             }
         }
         else
         {
-            // Missed - game over condition
+            // ❌ Missed completely — let the current grid fall
             Debug.Log("Game Over! Grid missed completely.");
+
+            if (TryGetComponent<Rigidbody>(out Rigidbody rb))
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            }
+
             return;
         }
 
-        // Call SetNextGrid event with this grid
+        // ✅ Continue to next grid
         Actions.SetNextGrid?.Invoke(this.gameObject);
     }
 }
