@@ -157,6 +157,7 @@ public class GridController : MonoBehaviour
         StackSpawner.gridHistory.Add(new GridData(transform.position.x, transform.position.y, transform.localScale.x, assignedMaterialIndex));
 
         Actions.SetNextGrid?.Invoke(this.gameObject);
+        GameManager.Instance.UpdateFollowTargetPosition(transform.position, StackSpawner.gridHistory[^1].x);
     }
 
     private void SpawnFallingPart(Vector3 position, float width)

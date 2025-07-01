@@ -198,6 +198,12 @@ public class Pool : MonoBehaviour
         {
             if (item.poolItemType == poolItemType)
             {
+                if (item.poolItemType == PoolItemType.Grid && member.TryGetComponent<Rigidbody>(out Rigidbody fallRb))
+                {
+                    fallRb.isKinematic = true;
+                    fallRb.useGravity = false;
+                }
+
                 member.transform.SetParent(item.parent.transform);
                 member.transform.position = item.parent.transform.position;
                 member.transform.rotation = item.parent.transform.rotation;
