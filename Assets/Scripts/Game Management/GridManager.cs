@@ -1,14 +1,14 @@
+using Data_Management;
 using Game_Management;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class GridManager
 {
-    public static List<GridData> gridHistory = new List<GridData>();
-
     private static float zStackInterval = 1.0f;
 
     private static int gridCount = 0;
+
+    public static bool IsInputLocked { get; set; } = false;
 
 
     #region Spawn Functions
@@ -22,7 +22,7 @@ public static class GridManager
             controller.Init(false); // Initial grid does NOT move
             gridCount = 1;
 
-            gridHistory.Add(new GridData(initialPosition.x, initialPosition.y, 1f, controller.assignedMaterialIndex));
+            DataManager.previousLevel.Add(new GridData(initialPosition.x, initialPosition.y, 1f, controller.AssignedMaterialIndex));
         }
 
         SpawnNextGrid();  // Start the stacking process immediately
@@ -32,7 +32,7 @@ public static class GridManager
     {
         float nextZ = gridCount * zStackInterval;
 
-        if (GameManager.Instance.ReachedFinishLine(nextZ))
+        if (GameManager.Instance.isReachedFinishLine(nextZ))
         {
             Actions.LevelFinished?.Invoke();
         }
@@ -75,8 +75,8 @@ public static class GridManager
 
     public static void SetFinishLine()
     {
-        int multiplier = GameManager.Instance.CurrentLevel / 10;
-        float distanceZ = (multiplier * 10 + GameManager.Instance.CurrentLevel + +5.5f) % 100;
+        int multiplier = DataManager.GetLevel / 10;
+        float distanceZ = (multiplier * 10 + DataManager.GetLevel + +5.5f) % 100;
         Vector3 finishLinePos = new Vector3(0, 0.1f, distanceZ);
         GameManager.Instance.SetFinishLine(Pool.Instance.SpawnObject(finishLinePos, PoolItemType.Finish, null).transform);
     }
@@ -108,22 +108,4 @@ public static class GridManager
     }
 
     #endregion
-}
-
-
-[System.Serializable]
-public struct GridData
-{
-    public float x;
-    public float y;
-    public float scaleX;
-    public int materialIndex;
-
-    public GridData(float x, float y, float scaleX, int materialIndex)
-    {
-        this.x = x;
-        this.y = y;
-        this.scaleX = scaleX;
-        this.materialIndex = materialIndex;
-    }
 }

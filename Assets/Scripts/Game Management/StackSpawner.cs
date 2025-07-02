@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class StackSpawner : MonoBehaviour
 {
-
-
     private void OnEnable()
     {
         Actions.SetNextGrid += OnNextGridRequested;

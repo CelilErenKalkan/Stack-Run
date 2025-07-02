@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e68b8aebdb6aab4a89d0630584d327b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridRenderer: {fileID: 975174275508481409}
   materialOptions:
   - {fileID: 2100000, guid: d1e7205df0c8b0142bf4385f4199ab2c, type: 2}
   - {fileID: 2100000, guid: d0ca2cd4145ff9c4282021e14702f4af, type: 2}
@@ -149,4 +150,5 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 2721c33cc7ed8c444bf50bb50b11b055, type: 2}
   - {fileID: 2100000, guid: 0304769e0c8dd25459a3cf2f6b542a59, type: 2}
   - {fileID: 2100000, guid: 5b25cd95e3901d24f89b00fa0a88cf4c, type: 2}
-  gridRenderer: {fileID: 975174275508481409}
+  matchThreshold: 0.3
+  perfectMatchTolerance: 0.01
