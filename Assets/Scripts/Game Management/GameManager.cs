@@ -4,17 +4,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("Gameplay Settings")]
+    [SerializeField] private Transform finishLine;
+    [SerializeField] private GameObject followTarget;
+
     private int currentLevel = 1;
-    public int GetLevel() => currentLevel;
+    private int score = 0;
 
-    public GameObject followTarget;
-
-    public Transform finishLine;
-
-    public float currentFinishZ { get; private set; }
-
-    [Header("Score")]
-    public int score = 0;
+    public int CurrentLevel => currentLevel;
+    public int Score => score;
+    public Transform FinishLine => finishLine;
+    public GameObject FollowTarget => followTarget;
 
     private void Awake()
     {
@@ -40,23 +40,24 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Score: {score}");
     }
 
-    public void ResetScore()
+    public void ResetScore() => score = 0;
+
+    public void SetFinishLine(Transform newFinishLine)
     {
-        score = 0;
+        finishLine = newFinishLine;
     }
 
-    public void UpdateFollowTargetPosition(Vector3 currentGridPos, float previousGridX)
+    public bool ReachedFinishLine(float zPos)
+    {
+        return finishLine != null && (finishLine.position.z - zPos <= 0.5f);
+    }
+
+    public void UpdateFollowTarget(Vector3 newGridPos, float previousX)
     {
         if (followTarget != null)
         {
-            Vector3 newPos = currentGridPos;
-            newPos.x = previousGridX;
-            followTarget.transform.position = newPos;
+            newGridPos.x = previousX;
+            followTarget.transform.position = newGridPos;
         }
-    }
-
-    public bool CheckFinisLine(float distanceZ)
-    {
-        return finishLine.position.z - distanceZ <= 0.5f;
     }
 }

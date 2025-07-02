@@ -36,7 +36,7 @@ public class GridController : MonoBehaviour
     {
         if (materialOptions != null && materialOptions.Count > 0)
         {
-            assignedMaterialIndex = UnityEngine.Random.Range(0, materialOptions.Count);
+            assignedMaterialIndex = Random.Range(0, materialOptions.Count);
             Material matInstance = Instantiate(materialOptions[assignedMaterialIndex]);
             gridRenderer.material = matInstance;
         }
@@ -76,13 +76,13 @@ public class GridController : MonoBehaviour
 
     private void HandleClick()
     {
-        if (StackSpawner.gridHistory.Count == 0)
+        if (GridManager.gridHistory.Count == 0)
         {
             Debug.LogWarning("No previous grid data found.");
             return;
         }
 
-        GridData previous = StackSpawner.gridHistory[^1];
+        GridData previous = GridManager.gridHistory[^1];
         float prevX = previous.x;
         float prevScaleX = previous.scaleX;
 
@@ -139,7 +139,7 @@ public class GridController : MonoBehaviour
             if (leftTrimWidth > 0)
             {
                 Vector3 fallPos = new Vector3(currLeft + leftTrimWidth / 2f, transform.position.y, transform.position.z);
-                SpawnFallingPart(fallPos, leftTrimWidth);
+                GridManager.SpawnFallingPart(fallPos, leftTrimWidth, assignedMaterialIndex);
             }
 
             // Spawn falling parts (right side)
@@ -147,37 +147,17 @@ public class GridController : MonoBehaviour
             if (rightTrimWidth > 0)
             {
                 Vector3 fallPos = new Vector3(currRight - rightTrimWidth / 2f, transform.position.y, transform.position.z);
-                SpawnFallingPart(fallPos, rightTrimWidth);
+                GridManager.SpawnFallingPart(fallPos, rightTrimWidth, assignedMaterialIndex);
             }
 
             GameManager.Instance.AddScore(1);
         }
 
         // Record current grid data
-        StackSpawner.gridHistory.Add(new GridData(transform.position.x, transform.position.y, transform.localScale.x, assignedMaterialIndex));
+        GridManager.gridHistory.Add(new GridData(transform.position.x, transform.position.y, transform.localScale.x, assignedMaterialIndex));
 
         Actions.SetNextGrid?.Invoke(this.gameObject);
-        GameManager.Instance.UpdateFollowTargetPosition(transform.position, StackSpawner.gridHistory[^1].x);
-    }
-
-    private void SpawnFallingPart(Vector3 position, float width)
-    {
-        GameObject fallingPart = Pool.Instance.SpawnObject(position, PoolItemType.Grid, null, 3f);
-        if (fallingPart != null)
-        {
-            fallingPart.transform.localScale = new Vector3(width, 0.2f, 1f);
-
-            if (fallingPart.TryGetComponent<Rigidbody>(out Rigidbody fallRb))
-            {
-                fallRb.isKinematic = false;
-                fallRb.useGravity = true;
-            }
-
-            if (fallingPart.TryGetComponent<GridController>(out GridController fallController))
-            {
-                fallController.SetMaterialByIndex(assignedMaterialIndex);
-            }
-        }
+        GameManager.Instance.UpdateFollowTarget(transform.position, GridManager.gridHistory[^1].x);
     }
 
     public void SetMaterialByIndex(int index)
