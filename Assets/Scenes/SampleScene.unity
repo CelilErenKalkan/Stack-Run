@@ -374,6 +374,13 @@ MonoBehaviour:
     expandable: 1
     poolItemType: 0
     parent: {fileID: 0}
+  - poolName: Finish
+    prefabs:
+    - {fileID: 8822058165888743613, guid: 50d59dd24e8b8264b890d8c1d9709931, type: 3}
+    amount: 1
+    expandable: 0
+    poolItemType: 1
+    parent: {fileID: 0}
   poolObjects: []
 --- !u!4 &1420882758
 Transform:
@@ -402,7 +409,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d478d40b66c9e4aac9cf3ac03a21bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zStackInterval: 1
+  gridPoolType: 0
+  lastPlatformPoolType: 1
 --- !u!114 &1420882760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,6 +423,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 083cee68b4403b54e9333636028aac4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: 0
+  scoreText: {fileID: 0}
+  lastPlatformBaseDistance: 3
+  lastPlatformMaxDistance: 10
+  lastPlatformIncreaseRate: 0.1
   followTarget: {fileID: 2057410366}
 --- !u!1 &1591871143
 GameObject:

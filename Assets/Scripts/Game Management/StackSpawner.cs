@@ -1,5 +1,6 @@
 using Game_Management;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class StackSpawner : MonoBehaviour
@@ -22,6 +23,7 @@ public class StackSpawner : MonoBehaviour
 
     private void Start()
     {
+        SetFinishLine();
         SpawnInitialGrid();
     }
 
@@ -41,6 +43,14 @@ public class StackSpawner : MonoBehaviour
         SpawnNextGrid();  // Start the stacking process immediately
     }
 
+    private void SetFinishLine()
+    {
+        int multiplier = GameManager.Instance.GetLevel() / 10;
+        float distanceZ = (multiplier * 10 + GameManager.Instance.GetLevel() +  + 5.5f) % 100;
+        Vector3 finishLinePos = new Vector3(0, 0.1f, distanceZ);
+        GameManager.Instance.finishLine = Pool.Instance.SpawnObject(finishLinePos, PoolItemType.Finish, null).transform;
+    }
+
     private void OnNextGridRequested(GameObject previousGrid)
     {
         Debug.Log("Next grid requested, spawning...");
@@ -50,17 +60,25 @@ public class StackSpawner : MonoBehaviour
     private void SpawnNextGrid()
     {
         float nextZ = gridCount * zStackInterval;
-        Vector3 spawnPos = new Vector3(0f, 0f, nextZ);
 
-        GameObject nextGrid = Pool.Instance.SpawnObject(spawnPos, PoolItemType.Grid, null);
-        if (nextGrid != null && nextGrid.TryGetComponent<GridController>(out GridController controller))
+        if (GameManager.Instance.CheckFinisLine(nextZ))
         {
-            controller.Init(true); // Moving grid
-            gridCount++;
+            Actions.LevelFinished?.Invoke();
         }
         else
         {
-            Debug.LogWarning("Failed to spawn or initialize next grid.");
+            Vector3 spawnPos = new Vector3(0f, 0f, nextZ);
+
+            GameObject nextGrid = Pool.Instance.SpawnObject(spawnPos, PoolItemType.Grid, null);
+            if (nextGrid != null && nextGrid.TryGetComponent<GridController>(out GridController controller))
+            {
+                controller.Init(true); // Moving grid
+                gridCount++;
+            }
+            else
+            {
+                Debug.LogWarning("Failed to spawn or initialize next grid.");
+            }
         }
     }
 }
