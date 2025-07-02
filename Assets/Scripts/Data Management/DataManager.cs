@@ -28,12 +28,14 @@ namespace Data_Management
         
         public int score;
         public int levelNo;
+        public bool isMuted;
 
         // Constructor with default values
-        public GameData(int score = 0, int levelNo = 1)
+        public GameData(int score = 0, int levelNo = 1, bool isMuted = false)
         {
             this.score = score;
             this.levelNo = levelNo;
+            this.isMuted = isMuted;
         }
     }
 
