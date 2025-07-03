@@ -17,7 +17,6 @@ public class GridController : MonoBehaviour
     //Grid Settings
     private float gridHeight = 0.2f;
     [SerializeField] private float matchThreshold = 0.3f;
-    [SerializeField] private float perfectMatchTolerance = 0.01f;
 
     //Emission Settings
     private float emissionIntensity = 2f;
@@ -75,7 +74,6 @@ public class GridController : MonoBehaviour
         }
 
         AssignedMaterialIndex = Random.Range(0, materialOptions.Count);
-        Debug.Log(materialOptions[AssignedMaterialIndex]);
         gridRenderer.material = materialOptions[AssignedMaterialIndex];
     }
 
@@ -131,7 +129,7 @@ public class GridController : MonoBehaviour
             return;
         }
 
-        if (Mathf.Abs(currScaleX - overlapWidth) < perfectMatchTolerance)
+        if (GridManager.IsPerfectMatch(currScaleX, overlapWidth))
         {
             SnapToPrevious(prevX, prevScaleX);
             AnimateEmission(true);

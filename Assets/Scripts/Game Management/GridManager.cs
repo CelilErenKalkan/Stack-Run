@@ -5,6 +5,7 @@ using UnityEngine;
 public static class GridManager
 {
     private static float zStackInterval = 1.0f;
+    private static float perfectMatchTolerance = 0.01f;
 
     private static int gridCount = 0;
 
@@ -104,7 +105,7 @@ public static class GridManager
 
     public static bool IsPerfectMatch(float originalWidth, float overlapWidth)
     {
-        return Mathf.Abs(originalWidth - overlapWidth) < 0.01f;
+        return Mathf.Abs(originalWidth - overlapWidth) < perfectMatchTolerance;
     }
 
     #endregion

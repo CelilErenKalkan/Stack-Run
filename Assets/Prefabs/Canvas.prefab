@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 1698928294368264349}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6445690297827338168}
@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 400}
   m_SizeDelta: {x: 520, y: 220}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &286110256652045468
@@ -471,8 +471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5dd1f0b4ebbc9e48a3bca5286f677fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuGameObject: {fileID: 0}
-  buttonLevelStart: {fileID: 3103470174004907753}
+  buttonGameStart: {fileID: 3103470174004907753}
   buttonAudio: {fileID: 4695244546426571668}
 --- !u!1 &4695244546426571669
 GameObject:
@@ -502,7 +501,7 @@ RectTransform:
   m_GameObject: {fileID: 4695244546426571669}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4695244544910597594}
@@ -511,7 +510,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: -50}
+  m_AnchoredPosition: {x: -150, y: -150}
   m_SizeDelta: {x: 512, y: 512}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4695244546426571674

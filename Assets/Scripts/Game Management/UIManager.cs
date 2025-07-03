@@ -16,7 +16,7 @@ namespace Game_Management
 
         private void OnEnable()
         {
-            
+            if (gameObject.TryGetComponent(out Animator animator)) _animator = animator;
         }
 
         private void OnDisable()
