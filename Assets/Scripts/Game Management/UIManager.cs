@@ -30,7 +30,7 @@ namespace Game_Management
             SetButtons();
         }
 
-        public void LevelStart()
+        private void LevelStart()
         {
             Actions.GameStarted?.Invoke();
             Actions.LevelStarted?.Invoke();

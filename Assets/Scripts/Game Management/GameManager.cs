@@ -1,4 +1,6 @@
+using System;
 using Data_Management;
+using Game_Management;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +13,8 @@ public class GameManager : MonoBehaviour
     public Transform FinishLine => finishLine;
     public GameObject FollowTarget => followTarget;
 
+    private bool isLevelStarted;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -18,6 +22,27 @@ public class GameManager : MonoBehaviour
 
         DataManager.LoadData();
         DataManager.LoadLevelOrder();
+    }
+
+    private void OnEnable()
+    {
+        Actions.LevelStarted += OnLevelStarted;
+    }
+
+    private void OnDisable()
+    {
+        Actions.LevelStarted -= OnLevelStarted;
+    }
+
+    private void Update()
+    {
+        if (isLevelStarted)
+            GridManager.HandleClickInput();
+    }
+
+    private void OnLevelStarted()
+    {
+        isLevelStarted = true;
     }
 
     public void LevelFinished()

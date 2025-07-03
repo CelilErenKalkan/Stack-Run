@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -8901656307495280236}
   - component: {fileID: 4344624256248966810}
   - component: {fileID: 603958153960295671}
+  - component: {fileID: 3428982173665692527}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -127,8 +128,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e68b8aebdb6aab4a89d0630584d327b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridHeight: 0.2
+  moveRange: 5
+  moveDuration: 3
+  matchThreshold: 0.3
+--- !u!114 &3428982173665692527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4676394743834013505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115e5dee034f0b64582668eb521f12ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   gridRenderer: {fileID: 975174275508481409}
   materialOptions:
+  - {fileID: 2100000, guid: 5b25cd95e3901d24f89b00fa0a88cf4c, type: 2}
   - {fileID: 2100000, guid: d1e7205df0c8b0142bf4385f4199ab2c, type: 2}
   - {fileID: 2100000, guid: d0ca2cd4145ff9c4282021e14702f4af, type: 2}
   - {fileID: 2100000, guid: a3f65138ba8a675438e7191cd4351bfe, type: 2}
@@ -149,6 +167,5 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 77e54005eace8f4418b34dfae2d88a8c, type: 2}
   - {fileID: 2100000, guid: 2721c33cc7ed8c444bf50bb50b11b055, type: 2}
   - {fileID: 2100000, guid: 0304769e0c8dd25459a3cf2f6b542a59, type: 2}
-  - {fileID: 2100000, guid: 5b25cd95e3901d24f89b00fa0a88cf4c, type: 2}
-  matchThreshold: 0.3
-  perfectMatchTolerance: 0.01
+  emissionIntensity: 2
+  emissionDuration: 0.5
