@@ -8,14 +8,12 @@ namespace Data_Management
     public struct GridData
     {
         public float x;
-        public float y;
         public float scaleX;
         public int materialIndex;
 
-        public GridData(float x, float y, float scaleX, int materialIndex)
+        public GridData(float x, float scaleX, int materialIndex)
         {
             this.x = x;
-            this.y = y;
             this.scaleX = scaleX;
             this.materialIndex = materialIndex;
         }
@@ -43,15 +41,17 @@ namespace Data_Management
     public static class DataManager
     {
         public static GameData gameData;
-        public static List<GridData> previousLevel = new List<GridData>();
+        public static List<GridData> previousLevel;
 
         public static int GetLevel => gameData.levelNo;
         public static int GetScore => gameData.score;
 
-        public static void NewLevel()
+        public static void SaveOnLevelEnd(List<GridData> currentLevel)
         {
+            previousLevel = currentLevel;
+            Debug.Log("pL" + previousLevel.Count);
+            SaveLevelOrder();
             gameData.levelNo++;
-            SaveLevelOrder(previousLevel);
             SaveData();
         }
 
@@ -99,21 +99,15 @@ namespace Data_Management
 
         #region Level Management
 
-        public static void AddNewGrid(GridData currentGrid)
+        private static void SaveLevelOrder()
         {
-            previousLevel.Add(currentGrid);
-        }
-
-        public static void SaveLevelOrder(List<GridData> pLevel)
-        {
-            previousLevel = pLevel;
             try
             {
                 FileHandler.SaveListToJson(previousLevel, "PreviousLevel.json");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Failed to save map order: {ex.Message}");
+                Debug.LogError($"Failed to save previous level: {ex.Message}");
             }
         }
 
@@ -125,7 +119,7 @@ namespace Data_Management
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Failed to load map order: {ex.Message}");
+                Debug.LogError($"Failed to load previous level: {ex.Message}");
                 previousLevel = new List<GridData>(); // Initialize empty list in case of failure.
             }
         }

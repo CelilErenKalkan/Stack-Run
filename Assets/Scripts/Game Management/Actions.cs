@@ -9,6 +9,7 @@ namespace Game_Management
         public static Action GameStarted;
         public static Action LevelStarted;
         public static Action LevelFinished;
+        public static Action ResetAllGrids;
         public static Action<bool> AudioChanged;
     }
 }

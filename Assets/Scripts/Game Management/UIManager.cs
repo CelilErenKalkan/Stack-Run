@@ -1,5 +1,5 @@
+using System.Collections;
 using Data_Management;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,11 +17,13 @@ namespace Game_Management
         private void OnEnable()
         {
             if (gameObject.TryGetComponent(out Animator animator)) _animator = animator;
+            
+            Actions.LevelFinished += OnLevelFinished;
         }
 
         private void OnDisable()
         {
-            
+            Actions.LevelFinished -= OnLevelFinished;
         }
 
         private void Start()
@@ -34,12 +36,23 @@ namespace Game_Management
         {
             Actions.GameStarted?.Invoke();
             Actions.LevelStarted?.Invoke();
-            GameStartAnimation(true);
+            GameUIAnimation(true);
         }
 
-        private void GameStartAnimation(bool isStarting)
+        private void OnLevelFinished()
         {
-            _animator.SetTrigger(isStarting ? "StartGame" : "EndGame");
+            GameUIAnimation(false);
+        }
+
+        private void GameUIAnimation(bool isStarting)
+        {
+            StartCoroutine(delayedCallForUI(isStarting? 0.1f : 3.0f));
+
+            IEnumerator delayedCallForUI(float time)
+            {
+                yield return new WaitForSeconds(time);
+                _animator.SetTrigger(isStarting ? "StartGame" : "EndGame");
+            }
         }
 
         private void ChangeAudioMod()

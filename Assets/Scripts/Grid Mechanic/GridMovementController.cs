@@ -83,10 +83,5 @@ namespace Grid_Mechanic
                 GridManager.SpawnFallingPart(rightFallPos, rightTrim, VisualController.AssignedMaterialIndex);
             }
         }
-
-        public Transform GetTransform() => cachedTransform;
-        public float GetScaleX() => cachedTransform.localScale.x;
-        public float GetPositionX() => cachedTransform.position.x;
-        public Vector3 GetPosition() => cachedTransform.position;
     }
 }

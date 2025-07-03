@@ -1,6 +1,6 @@
-using System;
 using Data_Management;
 using Game_Management;
+using Grid_Mechanic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Transform FinishLine => finishLine;
     public GameObject FollowTarget => followTarget;
 
-    private bool isLevelStarted;
+    public bool isLevelStarted;
 
     private void Awake()
     {
@@ -27,11 +27,13 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         Actions.LevelStarted += OnLevelStarted;
+        Actions.LevelFinished += OnLevelFinished;
     }
 
     private void OnDisable()
     {
         Actions.LevelStarted -= OnLevelStarted;
+        Actions.LevelFinished -= OnLevelFinished;
     }
 
     private void Update()
@@ -43,21 +45,17 @@ public class GameManager : MonoBehaviour
     private void OnLevelStarted()
     {
         isLevelStarted = true;
+        Pool.Instance.SpawnObject(new Vector3(0f, 0.2f, 0f), PoolItemType.Chibi, null);
     }
-
-    public void LevelFinished()
+    
+    private void OnLevelFinished()
     {
-        DataManager.NewLevel();
+        isLevelStarted = false;
+        GridManager.UpdateLevelEnd();
     }
-
     public void SetFinishLine(Transform newFinishLine)
     {
         finishLine = newFinishLine;
-    }
-
-    public bool isReachedFinishLine(float zPos)
-    {
-        return finishLine != null && (finishLine.position.z - zPos <= 0.5f);
     }
 
     public void UpdateFollowTarget(Vector3 newGridPos, float previousX)

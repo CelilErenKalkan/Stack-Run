@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using Game_Management;
 using UnityEngine;
 
 namespace Grid_Mechanic
@@ -27,7 +28,7 @@ namespace Grid_Mechanic
             }
 
             AssignedMaterialIndex = Random.Range(0, materialOptions.Count);
-            gridRenderer.material = materialOptions[AssignedMaterialIndex];
+            SetMaterialByIndex(AssignedMaterialIndex);
         }
 
         public void SetMaterialByIndex(int index)
@@ -36,8 +37,7 @@ namespace Grid_Mechanic
                 return;
 
             AssignedMaterialIndex = index;
-            Material matInstance = Instantiate(materialOptions[AssignedMaterialIndex]);
-            gridRenderer.material = matInstance;
+            gridRenderer.material = materialOptions[AssignedMaterialIndex];
         }
 
         public void AnimateEmission(bool glow)
@@ -54,6 +54,22 @@ namespace Grid_Mechanic
                 targetColor,
                 emissionDuration
             ).SetLoops(glow ? 2 : 1, LoopType.Yoyo);
+        }
+        
+        
+        private void OnEnable()
+        {
+            Actions.ResetAllGrids += ResetGrid;
+        }
+
+        private void OnDisable()
+        {
+            Actions.ResetAllGrids -= ResetGrid;
+        }
+
+        private void ResetGrid()
+        {
+            Pool.Instance.DeactivateObject(gameObject, PoolItemType.Grid);
         }
     }
 }

@@ -456,6 +456,13 @@ MonoBehaviour:
     expandable: 0
     poolItemType: 2
     parent: {fileID: 0}
+  - poolName: Chibi
+    prefabs:
+    - {fileID: 4978699718255468484, guid: 8ebf841af362818409cf000d8f1a2345, type: 3}
+    amount: 1
+    expandable: 0
+    poolItemType: 3
+    parent: {fileID: 0}
   poolObjects: []
 --- !u!4 &1420882758
 Transform:
@@ -498,6 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   finishLine: {fileID: 0}
   followTarget: {fileID: 2057410366}
+  isLevelStarted: 0
 --- !u!1 &1591871143
 GameObject:
   m_ObjectHideFlags: 3
