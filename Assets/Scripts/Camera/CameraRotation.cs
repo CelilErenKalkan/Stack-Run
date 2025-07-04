@@ -6,14 +6,14 @@ namespace Camera
 {
     public class CameraRotation : MonoBehaviour
     {
-        [HideInInspector] public float rotationSpeed = 5f; // Slower rotation speed
+        [HideInInspector] public float rotationSpeed = 500f; // Slower rotation speed
         [SerializeField] private Transform _followTarget;
 
         // Update is called once per frame
         private void LateUpdate()
         {
             if (_followTarget)
-                RotateAroundTarget(_followTarget.position);
+                RotateAroundTarget();
         }
         
         private void OnEnable()
@@ -44,10 +44,10 @@ namespace Camera
             _followTarget = target;
         }
     
-        private void RotateAroundTarget(Vector3 centerPosition)
+        private void RotateAroundTarget()
         {
             // Rotate the camera around the target
-            transform.RotateAround(_followTarget.position, Vector3.up, rotationSpeed * Time.deltaTime);
+            transform.RotateAround(_followTarget.position, Vector3.down, rotationSpeed * Time.deltaTime);
             transform.LookAt(_followTarget);
         }
     }
