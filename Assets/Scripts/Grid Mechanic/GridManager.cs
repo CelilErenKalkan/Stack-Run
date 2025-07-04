@@ -28,15 +28,14 @@ namespace Grid_Mechanic
         {
             DataManager.SaveOnLevelEnd(currentLevel);
             Actions.ResetAllGrids?.Invoke();
+            SpawnPreviousLevel();
             ResetFinishLine();
             currentLevel.Clear();
-            SpawnPreviousLevel();
         }
 
         public static void SpawnPreviousLevel()
         {
             var previousLevel = DataManager.previousLevel;
-            Debug.Log("sp" + previousLevel.Count);
             var zDifference = previousLevel.Count;
         
             for (var i = 0; i < previousLevel.Count; i++)

@@ -49,7 +49,6 @@ namespace Data_Management
         public static void SaveOnLevelEnd(List<GridData> currentLevel)
         {
             previousLevel = currentLevel;
-            Debug.Log("pL" + previousLevel.Count);
             SaveLevelOrder();
             gameData.levelNo++;
             SaveData();
