@@ -29,7 +29,6 @@ namespace Grid_Mechanic
             DataManager.SaveOnLevelEnd(currentLevel);
             Actions.ResetAllGrids?.Invoke();
             ResetFinishLine();
-            GameManager.Instance.FollowTarget.transform.position = Vector3.zero;
             currentLevel.Clear();
             SpawnPreviousLevel();
         }
@@ -77,10 +76,11 @@ namespace Grid_Mechanic
                 gridCount = 1;
 
                 var gridData = new GridData(0.0f, 1f, vController.AssignedMaterialIndex);
-                currentLevel.Add(gridData); // ✅ Add to current level only
+                currentLevel.Add(gridData); // Add to current level only
             }
 
-            SpawnNextGrid();
+            Actions.SetNextGrid?.Invoke(initialGrid);
+            GameManager.Instance.UpdateFollowTarget(initialGrid.transform.position, 0f);
         }
 
 
