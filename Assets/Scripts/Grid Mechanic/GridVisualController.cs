@@ -33,10 +33,10 @@ namespace Grid_Mechanic
 
         public void SetMaterialByIndex(int index)
         {
-            if (materialOptions == null || index < 0 || index >= materialOptions.Count)
+            if (materialOptions == null || index < 0)
                 return;
 
-            AssignedMaterialIndex = index;
+            AssignedMaterialIndex = index % materialOptions.Count;
             gridRenderer.material = materialOptions[AssignedMaterialIndex];
         }
 

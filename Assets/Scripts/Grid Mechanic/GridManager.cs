@@ -17,6 +17,9 @@ namespace Grid_Mechanic
 
         private static GridMovementController _activeGridMovementController;
 
+        // Material cycling
+        private static int materialCounter = 0;
+
         private static bool isReachedFinishLine(float zPos)
         {
             return GameManager.Instance.FinishLine != null && (GameManager.Instance.FinishLine.position.z - zPos <= 0.5f);
@@ -37,75 +40,91 @@ namespace Grid_Mechanic
         {
             var previousLevel = DataManager.previousLevel;
             var zDifference = previousLevel.Count;
-        
+
             for (var i = 0; i < previousLevel.Count; i++)
             {
-                SpawnGrid(i - zDifference, previousLevel[i].materialIndex);
+                SpawnGrid(i - zDifference, previousLevel[i].materialIndex, previousLevel[i].scaleX);
             }
         }
 
-        private static GameObject SpawnGrid(float z)
+        private static GameObject SpawnGrid(float z, float scaleX = 1)
+        {
+            Vector3 spawnPos = new Vector3(0f, 0f, z);
+            var grid = Pool.Instance.SpawnObject(spawnPos, PoolItemType.Grid, null);
+            grid.transform.localScale = new Vector3(scaleX, 0.2f, 1f);
+
+            return grid;
+        }
+
+        private static GameObject SpawnGrid(float z, int materialIndex, float scaleX = 1)
         {
             Vector3 spawnPos = new Vector3(0f, 0f, z);
 
-            return Pool.Instance.SpawnObject(spawnPos, PoolItemType.Grid, null);
-        }
-    
-        private static GameObject SpawnGrid(float z, int materialIndex)
-        {
-            Vector3 spawnPos = new Vector3(0f, 0f, z);
-        
             var grid = Pool.Instance.SpawnObject(spawnPos, PoolItemType.Grid, null);
-        
+            grid.transform.localScale = new Vector3(scaleX, 0.2f, 1f);
+
             if (grid.TryGetComponent(out GridVisualController vController))
                 vController.SetMaterialByIndex(materialIndex);
 
             return grid;
         }
 
+        private static void SetGridMaterial(GridVisualController vController)
+        {
+            if (materialCounter <= 0)
+                materialCounter = Random.Range(0, 100);
+            
+            vController.SetMaterialByIndex(materialCounter);
+            materialCounter++;
+        }
+
         public static void SpawnInitialGrid()
         {
             var initialGrid = SpawnGrid(1.0f);
 
-            if (initialGrid != null 
-                && initialGrid.TryGetComponent(out GridMovementController mController)
-                && initialGrid.TryGetComponent(out GridVisualController vController))
+            if (initialGrid != null &&
+                initialGrid.TryGetComponent(out GridMovementController mController) &&
+                initialGrid.TryGetComponent(out GridVisualController vController))
             {
-                mController.Init(false);
+                mController.Init(false); // fixed duration for static grid
                 gridCount = 1;
 
-                var gridData = new GridData(0.0f, 1f, vController.AssignedMaterialIndex);
-                currentLevel.Add(gridData); // Add to current level only
+                SetGridMaterial(vController);
+                var gridData = new GridData(0.0f, 1f, materialCounter);
+                currentLevel.Add(gridData);
             }
 
             Actions.SetNextGrid?.Invoke(initialGrid);
             GameManager.Instance.UpdateFollowTarget(initialGrid.transform.position, 0f);
         }
 
-
         public static void SpawnNextGrid()
         {
-            var nextZ = gridCount * zStackInterval + 1;
+            float nextZ = gridCount * zStackInterval + 1;
 
-            if (isReachedFinishLine(nextZ))
+            if (!isReachedFinishLine(nextZ))
             {
-                //Actions.LevelFinished?.Invoke();
-            }
-            else
-            {
-                var nextGrid = SpawnGrid(nextZ);
-            
-                if (nextGrid != null && nextGrid.TryGetComponent(out GridMovementController controller))
+                float prevScaleX = 1f;
+                if (currentLevel.Count > 0)
+                    prevScaleX = currentLevel[^1].scaleX;
+
+                var nextGrid = SpawnGrid(nextZ, prevScaleX);
+                if (nextGrid == null) return;
+
+                if (nextGrid.TryGetComponent(out GridMovementController controller))
                 {
                     controller.Init(true);
                     _activeGridMovementController = controller;
                     gridCount++;
                 }
-                else
+
+                if (nextGrid.TryGetComponent(out GridVisualController vController))
                 {
-                    Debug.LogWarning("Failed to spawn or initialize next grid.");
+                    SetGridMaterial(vController);
                 }
             }
+
+
         }
 
         public static void SpawnFallingPart(Vector3 position, float width, int materialIndex)
@@ -142,8 +161,11 @@ namespace Grid_Mechanic
 
         private static void ResetFinishLine()
         {
-            Pool.Instance.DeactivateObject(GameManager.Instance.FinishLine.gameObject, PoolItemType.Finish);
-            GameManager.Instance.SetFinishLine(null);
+            if (GameManager.Instance.FinishLine != null)
+            {
+                Pool.Instance.DeactivateObject(GameManager.Instance.FinishLine.gameObject, PoolItemType.Finish);
+                GameManager.Instance.SetFinishLine(null);
+            }
         }
 
         #endregion
@@ -193,7 +215,6 @@ namespace Grid_Mechanic
                 DataManager.SetScore(1);
             }
 
-            // Add to currentLevel list instead of DataManager
             currentLevel.Add(new GridData(
                 gridMovement.transform.position.x,
                 gridMovement.transform.localScale.x,

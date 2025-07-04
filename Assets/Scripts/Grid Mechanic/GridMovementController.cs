@@ -7,7 +7,6 @@ namespace Grid_Mechanic
     public class GridMovementController : MonoBehaviour
     {
         [Header("Grid Settings")]
-        [SerializeField] private float gridHeight = 0.2f;
         [SerializeField] private float moveRange = 5f;
         [SerializeField] private float moveDuration = 3f;
         [SerializeField] private float matchThreshold = 0.3f;
@@ -16,7 +15,6 @@ namespace Grid_Mechanic
         private Transform cachedTransform;
 
         public float MatchThreshold => matchThreshold;
-        public float GridHeight => gridHeight;
 
         public GridVisualController VisualController { get; private set; }
 
@@ -29,7 +27,6 @@ namespace Grid_Mechanic
         public void Init(bool shouldMove = true)
         {
             GridManager.IsInputLocked = false;
-            cachedTransform.localScale = new Vector3(1f, gridHeight, 1f);
             VisualController.AssignRandomMaterial();
 
             if (shouldMove)
@@ -60,13 +57,13 @@ namespace Grid_Mechanic
 
         public void SnapTo(float prevX, float prevScaleX)
         {
-            cachedTransform.localScale = new Vector3(prevScaleX, gridHeight, 1f);
+            cachedTransform.localScale = new Vector3(prevScaleX, 0.2f, 1f);
             cachedTransform.position = new Vector3(prevX, cachedTransform.position.y, cachedTransform.position.z);
         }
 
         public void TrimAndSpawnFallingParts(float currLeft, float currRight, float overlapLeft, float overlapRight, float overlapWidth)
         {
-            cachedTransform.localScale = new Vector3(overlapWidth, gridHeight, 1f);
+            cachedTransform.localScale = new Vector3(overlapWidth, 0.2f, 1f);
             cachedTransform.position = new Vector3((overlapLeft + overlapRight) / 2f, cachedTransform.position.y, cachedTransform.position.z);
 
             float leftTrim = overlapLeft - currLeft;
