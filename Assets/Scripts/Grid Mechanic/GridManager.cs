@@ -28,6 +28,7 @@ namespace Grid_Mechanic
         {
             DataManager.SaveOnLevelEnd(currentLevel);
             Actions.ResetAllGrids?.Invoke();
+            ResetFinishLine();
             GameManager.Instance.FollowTarget.transform.position = Vector3.zero;
             currentLevel.Clear();
             SpawnPreviousLevel();
@@ -37,14 +38,12 @@ namespace Grid_Mechanic
         {
             var previousLevel = DataManager.previousLevel;
             Debug.Log("sp" + previousLevel.Count);
-            var zDifference = previousLevel.Count - 1;
+            var zDifference = previousLevel.Count;
         
             for (var i = 0; i < previousLevel.Count; i++)
             {
                 SpawnGrid(i - zDifference, previousLevel[i].materialIndex);
             }
-
-            GameManager.Instance.FinishLine.position = new Vector3(0f, 0f, 0.5f);
         }
 
         private static GameObject SpawnGrid(float z)
@@ -68,7 +67,7 @@ namespace Grid_Mechanic
 
         public static void SpawnInitialGrid()
         {
-            var initialGrid = SpawnGrid(0.0f);
+            var initialGrid = SpawnGrid(1.0f);
 
             if (initialGrid != null 
                 && initialGrid.TryGetComponent(out GridMovementController mController)
@@ -87,7 +86,7 @@ namespace Grid_Mechanic
 
         public static void SpawnNextGrid()
         {
-            float nextZ = gridCount * zStackInterval;
+            var nextZ = gridCount * zStackInterval + 1;
 
             if (isReachedFinishLine(nextZ))
             {
@@ -130,12 +129,22 @@ namespace Grid_Mechanic
             }
         }
 
-        public static void SpawnFinishLine()
+        public static float FinishLineDistanceCalculation()
         {
-            int multiplier = DataManager.GetLevel / 10;
-            float distanceZ = (multiplier * 10 + DataManager.GetLevel + 5.5f) % 100;
+            var multiplier = DataManager.GetLevel / 10;
+            return (multiplier * 10 + DataManager.GetLevel + 5.0f) % 100;
+        }
+
+        public static void SpawnFinishLine(float distanceZ)
+        {
             Vector3 finishLinePos = new Vector3(0, 0.1f, distanceZ);
             GameManager.Instance.SetFinishLine(Pool.Instance.SpawnObject(finishLinePos, PoolItemType.Finish, null).transform);
+        }
+
+        private static void ResetFinishLine()
+        {
+            Pool.Instance.DeactivateObject(GameManager.Instance.FinishLine.gameObject, PoolItemType.Finish);
+            GameManager.Instance.SetFinishLine(null);
         }
 
         #endregion

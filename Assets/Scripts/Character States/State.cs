@@ -27,10 +27,6 @@ namespace Character
         protected ChibiController Controller;
         protected State nextState;
 
-        private float visDist = 10.0f;
-        private float visAngle = 30.0f;
-        private float shootDist = 7.0f;
-
         public State(Animator _anim, ChibiController controller)
         {
             anim = _anim;

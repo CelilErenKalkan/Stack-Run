@@ -10,8 +10,10 @@ public class GameManager : MonoBehaviour
     [Header("Gameplay Settings")]
     [SerializeField] private Transform finishLine;
     [SerializeField] private GameObject followTarget;
+    [SerializeField] private GameObject chibi;
     public Transform FinishLine => finishLine;
     public GameObject FollowTarget => followTarget;
+    public GameObject Chibi => chibi;
 
     public bool isLevelStarted;
 
@@ -45,7 +47,7 @@ public class GameManager : MonoBehaviour
     private void OnLevelStarted()
     {
         isLevelStarted = true;
-        Pool.Instance.SpawnObject(new Vector3(0f, 0.2f, 0f), PoolItemType.Chibi, null);
+        SpawnChibi();
     }
     
     private void OnLevelFinished()
@@ -53,6 +55,12 @@ public class GameManager : MonoBehaviour
         isLevelStarted = false;
         GridManager.UpdateLevelEnd();
     }
+
+    private void SpawnChibi()
+    {
+        chibi = Pool.Instance.SpawnObject(new Vector3(0f, 0.2f, 0f), PoolItemType.Chibi, null);
+    }
+    
     public void SetFinishLine(Transform newFinishLine)
     {
         finishLine = newFinishLine;

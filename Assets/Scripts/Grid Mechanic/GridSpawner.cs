@@ -1,4 +1,3 @@
-using System;
 using Data_Management;
 using Game_Management;
 using UnityEngine;
@@ -27,13 +26,12 @@ namespace Grid_Mechanic
 
         private void OnLevelStarted()
         {
-            GridManager.SpawnFinishLine();
+            GridManager.SpawnFinishLine(GridManager.FinishLineDistanceCalculation());
             GridManager.SpawnInitialGrid();
         }
 
         private void OnNextGridRequested(GameObject previousGrid)
         {
-            Debug.Log("Next grid requested, spawning...");
             GridManager.SpawnNextGrid();
         }
     }

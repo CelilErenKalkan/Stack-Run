@@ -417,22 +417,22 @@ namespace DG.Tweening
                 tween = tweenGO.transform.DOShakeRotation(duration, endValueV3, optionalInt0, optionalFloat0);
                 break;
             case AnimationType.CameraAspect:
-                tween = ((Camera)target).DOAspect(endValueFloat, duration);
+                tween = ((UnityEngine.Camera)target).DOAspect(endValueFloat, duration);
                 break;
             case AnimationType.CameraBackgroundColor:
-                tween = ((Camera)target).DOColor(endValueColor, duration);
+                tween = ((UnityEngine.Camera)target).DOColor(endValueColor, duration);
                 break;
             case AnimationType.CameraFieldOfView:
-                tween = ((Camera)target).DOFieldOfView(endValueFloat, duration);
+                tween = ((UnityEngine.Camera)target).DOFieldOfView(endValueFloat, duration);
                 break;
             case AnimationType.CameraOrthoSize:
-                tween = ((Camera)target).DOOrthoSize(endValueFloat, duration);
+                tween = ((UnityEngine.Camera)target).DOOrthoSize(endValueFloat, duration);
                 break;
             case AnimationType.CameraPixelRect:
-                tween = ((Camera)target).DOPixelRect(endValueRect, duration);
+                tween = ((UnityEngine.Camera)target).DOPixelRect(endValueRect, duration);
                 break;
             case AnimationType.CameraRect:
-                tween = ((Camera)target).DORect(endValueRect, duration);
+                tween = ((UnityEngine.Camera)target).DORect(endValueRect, duration);
                 break;
             }
 

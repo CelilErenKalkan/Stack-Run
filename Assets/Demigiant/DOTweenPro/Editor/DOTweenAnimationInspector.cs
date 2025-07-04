@@ -100,12 +100,12 @@ namespace DG.DOTweenEditor
             }},
             { DOTweenAnimation.AnimationType.ShakeRotation, new[] { typeof(Transform) } },
             { DOTweenAnimation.AnimationType.ShakeScale, new[] { typeof(Transform) } },
-            { DOTweenAnimation.AnimationType.CameraAspect, new[] { typeof(Camera) } },
-            { DOTweenAnimation.AnimationType.CameraBackgroundColor, new[] { typeof(Camera) } },
-            { DOTweenAnimation.AnimationType.CameraFieldOfView, new[] { typeof(Camera) } },
-            { DOTweenAnimation.AnimationType.CameraOrthoSize, new[] { typeof(Camera) } },
-            { DOTweenAnimation.AnimationType.CameraPixelRect, new[] { typeof(Camera) } },
-            { DOTweenAnimation.AnimationType.CameraRect, new[] { typeof(Camera) } },
+            { DOTweenAnimation.AnimationType.CameraAspect, new[] { typeof(UnityEngine.Camera) } },
+            { DOTweenAnimation.AnimationType.CameraBackgroundColor, new[] { typeof(UnityEngine.Camera) } },
+            { DOTweenAnimation.AnimationType.CameraFieldOfView, new[] { typeof(UnityEngine.Camera) } },
+            { DOTweenAnimation.AnimationType.CameraOrthoSize, new[] { typeof(UnityEngine.Camera) } },
+            { DOTweenAnimation.AnimationType.CameraPixelRect, new[] { typeof(UnityEngine.Camera) } },
+            { DOTweenAnimation.AnimationType.CameraRect, new[] { typeof(UnityEngine.Camera) } },
 #if true // UI_MARKER
             { DOTweenAnimation.AnimationType.UIWidthHeight, new[] { typeof(RectTransform) } },
 #endif
