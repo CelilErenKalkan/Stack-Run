@@ -40,7 +40,7 @@ namespace Assets
 
         private void OnLevelFinished()
         {
-            transform.position = Vector3.zero;
+            transform.position = new Vector3(0f, 0.2f, 0f);
         }
         
         public void MoveForward()

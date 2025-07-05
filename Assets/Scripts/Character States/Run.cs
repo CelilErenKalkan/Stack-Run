@@ -21,6 +21,7 @@ public class Run : State
 
         if (Controller.IsNearFinishLine())
         {
+            Debug.Log("inside if");
             nextState = new Dance(anim, Controller);
             Actions.LevelFinished?.Invoke();
             stage = EVENT.EXIT;
@@ -31,6 +32,7 @@ public class Run : State
 
     public override void Exit()
     {
+        Debug.Log("exiting run");
         anim.ResetTrigger("isRunning");
         base.Exit();
     }

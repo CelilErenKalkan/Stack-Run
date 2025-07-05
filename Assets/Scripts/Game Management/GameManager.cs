@@ -47,13 +47,15 @@ public class GameManager : MonoBehaviour
     private void OnLevelStarted()
     {
         isLevelStarted = true;
-        SpawnChibi();
+        if (chibi == null)
+            SpawnChibi();
     }
     
     private void OnLevelFinished()
     {
         isLevelStarted = false;
         GridManager.UpdateLevelEnd();
+        UpdateFollowTarget(Vector3.zero, 0f);
     }
 
     private void SpawnChibi()
