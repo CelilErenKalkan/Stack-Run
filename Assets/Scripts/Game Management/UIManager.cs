@@ -34,7 +34,7 @@ namespace Game_Management
 
         private void LevelStart()
         {
-            Actions.GameStarted?.Invoke();
+            Actions.ButtonPush?.Invoke();
             Actions.LevelStarted?.Invoke();
             GameUIAnimation(true);
         }
@@ -57,6 +57,7 @@ namespace Game_Management
 
         private void ChangeAudioMod()
         {
+            Actions.ButtonPush?.Invoke();
             DataManager.gameData.isMuted = !DataManager.gameData.isMuted;
             SetAudio();
         }

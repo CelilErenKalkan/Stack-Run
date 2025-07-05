@@ -8,7 +8,7 @@ namespace Grid_Mechanic
     public static class GridManager
     {
         private static float zStackInterval = 1.0f;
-        private static float perfectMatchTolerance = 0.01f;
+        private static float perfectMatchTolerance = 0.1f;
         private static int gridCount = 0;
 
         private static List<GridData> currentLevel = new List<GridData>();
@@ -205,12 +205,14 @@ namespace Grid_Mechanic
 
             if (IsPerfectMatch(gridMovement.transform.localScale.x, overlapWidth))
             {
+                Actions.PerfectNote?.Invoke();
                 gridMovement.SnapTo(previous.x, previous.scaleX);
                 gridVisual.AnimateEmission(true);
                 DataManager.SetScore(2);
             }
             else
             {
+                Actions.StandardNote?.Invoke();
                 gridMovement.TrimAndSpawnFallingParts(currLeft, currRight, overlapLeft, overlapRight, overlapWidth);
                 DataManager.SetScore(1);
             }
