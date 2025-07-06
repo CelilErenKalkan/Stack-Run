@@ -209,13 +209,11 @@ namespace Grid_Mechanic
                 Actions.PerfectNote?.Invoke();
                 gridMovement.SnapTo(previous.x, previous.scaleX);
                 gridVisual.AnimateEmission(true);
-                DataManager.SetScore(2);
             }
             else
             {
                 Actions.StandardNote?.Invoke();
                 gridMovement.TrimAndSpawnFallingParts(currLeft, currRight, overlapLeft, overlapRight, overlapWidth);
-                DataManager.SetScore(1);
             }
 
             currentLevel.Add(new GridData(

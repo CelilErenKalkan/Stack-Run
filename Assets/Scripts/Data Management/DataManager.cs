@@ -24,14 +24,12 @@ namespace Data_Management
     {
         // Public fields or properties to be serialized
         
-        public int score;
         public int levelNo;
         public bool isMuted;
 
         // Constructor with default values
-        public GameData(int score = 0, int levelNo = 1, bool isMuted = false)
+        public GameData(int levelNo = 1, bool isMuted = false)
         {
-            this.score = score;
             this.levelNo = levelNo;
             this.isMuted = isMuted;
         }
@@ -44,7 +42,6 @@ namespace Data_Management
         public static List<GridData> previousLevel;
 
         public static int GetLevel => gameData.levelNo;
-        public static int GetScore => gameData.score;
 
         public static void SaveOnLevelEnd(List<GridData> currentLevel)
         {
@@ -52,11 +49,6 @@ namespace Data_Management
             SaveLevelOrder();
             gameData.levelNo++;
             SaveData();
-        }
-
-        public static void SetScore(int amount)
-        {
-            gameData.score += amount;
         }
 
         #region Data Management
