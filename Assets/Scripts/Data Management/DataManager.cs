@@ -60,7 +60,7 @@ namespace Data_Management
         {
             try
             {
-                gameData = FileHandler.ReadFromJson<GameData>("PlayerData.json");
+                gameData = FileHandler.ReadFromJson<GameData>("GameData.json");
                 SaveData();
             }
             catch (Exception ex)
