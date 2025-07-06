@@ -76,6 +76,8 @@ public class GameManager : MonoBehaviour
     private void SpawnChibi()
     {
         chibi = Pool.Instance.SpawnObject(new Vector3(0f, 0.2f, 0f), PoolItemType.Chibi, null);
+        
+        chibi.transform.eulerAngles = Vector3.zero;
         if (chibi.TryGetComponent(out Rigidbody rigidbody))
         {
             rigidbody.useGravity = false;

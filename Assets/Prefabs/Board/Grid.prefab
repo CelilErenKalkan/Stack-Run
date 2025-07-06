@@ -128,9 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e68b8aebdb6aab4a89d0630584d327b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridHeight: 0.2
-  moveRange: 5
-  moveDuration: 3
+  moveRange: 4
+  moveDuration: 1.6
   matchThreshold: 0.3
 --- !u!114 &3428982173665692527
 MonoBehaviour:

@@ -13,7 +13,7 @@ namespace Audio
 
         private int _perfectStreak = 0;
         private float _basePitch = 1f;
-        private float _pitchIncreasePerPerfect = 0.05f;
+        private float _pitchIncreasePerPerfect = 0.1f;
         private float _maxPitch = 2f;
 
         private void OnEnable()

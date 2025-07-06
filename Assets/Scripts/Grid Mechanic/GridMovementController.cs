@@ -7,15 +7,15 @@ namespace Grid_Mechanic
     public class GridMovementController : MonoBehaviour
     {
         [Header("Grid Settings")]
-        [SerializeField] private float moveRange = 5f;
-        [SerializeField] private float moveDuration = 3f;
+        [SerializeField] private float moveRange = 2f;
+        [SerializeField] private float moveDuration = 0.2f;
         [SerializeField] private float matchThreshold = 0.3f;
 
         private Tween moveTween;
         private Transform cachedTransform;
+        private bool moveFromLeft = true;
 
         public float MatchThreshold => matchThreshold;
-
         public GridVisualController VisualController { get; private set; }
 
         private void Awake()
@@ -24,10 +24,22 @@ namespace Grid_Mechanic
             VisualController = GetComponent<GridVisualController>();
         }
 
+        /// <summary>
+        /// Standard init with random direction.
+        /// </summary>
         public void Init(bool shouldMove = true)
+        {
+            Init(shouldMove, Random.value > 0.5f);
+        }
+
+        /// <summary>
+        /// Init with explicit direction.
+        /// </summary>
+        public void Init(bool shouldMove, bool moveFromLeftSide)
         {
             GridManager.IsInputLocked = false;
             VisualController.AssignRandomMaterial();
+            moveFromLeft = moveFromLeftSide;
 
             if (shouldMove)
                 StartMovement();
@@ -35,10 +47,13 @@ namespace Grid_Mechanic
 
         private void StartMovement()
         {
-            moveTween = cachedTransform.DOMoveX(moveRange, moveDuration)
+            float fromX = moveFromLeft ? -moveRange : moveRange;
+            float targetX = moveRange * (moveFromLeft ? 1 : -1);
+
+            moveTween = cachedTransform.DOMoveX(targetX, moveDuration)
                 .SetLoops(-1, LoopType.Yoyo)
                 .SetEase(Ease.Linear)
-                .From(-moveRange);
+                .From(fromX);
         }
 
         public void StopMovement()

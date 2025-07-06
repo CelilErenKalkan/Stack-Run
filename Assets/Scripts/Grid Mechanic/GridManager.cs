@@ -152,7 +152,7 @@ namespace Grid_Mechanic
         public static float FinishLineDistanceCalculation()
         {
             var multiplier = DataManager.GetLevel / 10;
-            return (multiplier * 10 + DataManager.GetLevel + 5.0f) % 100;
+            return (multiplier * 10 + DataManager.GetLevel + 50.0f) % 100;
         }
 
         public static void SpawnFinishLine(float distanceZ)
@@ -197,7 +197,6 @@ namespace Grid_Mechanic
 
             if (!TryEvaluateOverlap(previous, gridMovement.transform, gridMovement.MatchThreshold, out float overlapWidth, out float overlapLeft, out float overlapRight))
             {
-                Debug.Log("Game Over! Grid missed completely.");
                 gridMovement.ApplyGravity();
                 return;
             }

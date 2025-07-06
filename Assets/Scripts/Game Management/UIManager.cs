@@ -13,6 +13,9 @@ namespace Game_Management
         private Image _audioButtonImage;
         private Sprite _mute, _unmute;
         private TMP_Text _buttonStartText;
+        public TMP_Text levelText, scoreText;
+
+        private int score = 0;
 
         private Animator _animator;
 
@@ -22,6 +25,7 @@ namespace Game_Management
 
             Actions.LevelFinished += OnLevelFinished;
             Actions.LevelFailed += OnLevelFailed;
+            Actions.SetNextGrid += NewScore;
         }
 
         private void OnDisable()
@@ -36,10 +40,18 @@ namespace Game_Management
             SetButtons();
         }
 
+        private void NewScore(GameObject grid)
+        {
+            score++;
+            scoreText.text = score + "!";
+            _animator.Play("NewScore");
+        }
+
         private void LevelStart()
         {
             Actions.ButtonPush?.Invoke();
             Actions.LevelStarted?.Invoke();
+            levelText.text = "Level " + DataManager.gameData.levelNo;
             GameUIAnimation(true);
         }
 
