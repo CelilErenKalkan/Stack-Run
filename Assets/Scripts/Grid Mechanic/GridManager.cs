@@ -12,6 +12,7 @@ namespace Grid_Mechanic
         private static int gridCount = 0;
 
         private static List<GridData> currentLevel = new List<GridData>();
+        public static List<GridData> CurrentLevel => currentLevel;
 
         public static bool IsInputLocked { get; set; } = false;
 
@@ -27,9 +28,10 @@ namespace Grid_Mechanic
 
         #region Spawning
 
-        public static void UpdateLevelEnd()
+        public static void UpdateLevelEnd(bool isSuccess)
         {
-            DataManager.SaveOnLevelEnd(currentLevel);
+            if (isSuccess)
+                DataManager.SaveOnLevelEnd(currentLevel);
             Actions.ResetAllGrids?.Invoke();
             SpawnPreviousLevel();
             ResetFinishLine();

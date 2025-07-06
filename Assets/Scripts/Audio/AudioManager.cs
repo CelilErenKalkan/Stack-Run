@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Data_Management;
 using Game_Management;
@@ -24,6 +23,7 @@ namespace Audio
             Actions.StandardNote += OnStandardNote;
             Actions.PerfectNote += OnPerfectNote;
             Actions.LevelFinished += OnLevelFinished;
+            Actions.LevelFailed += OnLevelFailed;
         }
 
         private void OnDisable()
@@ -33,6 +33,7 @@ namespace Audio
             Actions.StandardNote -= OnStandardNote;
             Actions.PerfectNote -= OnPerfectNote;
             Actions.LevelFinished -= OnLevelFinished;
+            Actions.LevelFailed -= OnLevelFailed;
         }
 
         private void Start()
@@ -67,8 +68,12 @@ namespace Audio
 
         private void OnLevelFinished()
         {
-            Debug.Log("Test");
             PlaySound(7, _basePitch);
+        }
+        
+        private void OnLevelFailed()
+        {
+            PlaySound(8, _basePitch);
         }
 
         private void PlaySound(int index, float pitch)

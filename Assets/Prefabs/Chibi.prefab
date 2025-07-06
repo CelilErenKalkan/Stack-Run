@@ -363,6 +363,8 @@ GameObject:
   - component: {fileID: 5646447060418037118}
   - component: {fileID: 1782327572533206788}
   - component: {fileID: -7331589005734273489}
+  - component: {fileID: 390314183494177263}
+  - component: {fileID: 3227497270620314974}
   m_Layer: 0
   m_Name: Chibi
   m_TagString: Untagged
@@ -423,6 +425,36 @@ MonoBehaviour:
   forwardSpeed: 0.5
   followSpeed: 2.5
   finishDistanceThreshold: 0.2
+--- !u!54 &390314183494177263
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4978699718255468484}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!136 &3227497270620314974
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4978699718255468484}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.21926624
+  m_Height: 1.262145
+  m_Direction: 1
+  m_Center: {x: 0.008912206, y: 0.6613475, z: 0}
 --- !u!1 &5103577072221404319
 GameObject:
   m_ObjectHideFlags: 0

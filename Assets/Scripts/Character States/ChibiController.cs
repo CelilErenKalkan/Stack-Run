@@ -64,5 +64,10 @@ namespace Assets
             float distance = Vector3.Distance(transform.position, _gameManager.FinishLine.position);
             return distance <= finishDistanceThreshold;
         }
+
+        public bool IsFalling()
+        {
+            return transform.position.y <= 0;
+        }
     }
 }

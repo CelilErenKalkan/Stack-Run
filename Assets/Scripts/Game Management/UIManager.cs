@@ -1,5 +1,6 @@
 using System.Collections;
 using Data_Management;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,23 +8,26 @@ namespace Game_Management
 {
     public class UIManager : MonoBehaviour
     {
-        public Button buttonGameStart, buttonAudio;
+        public Button buttonStart, buttonAudio;
 
         private Image _audioButtonImage;
         private Sprite _mute, _unmute;
+        private TMP_Text _buttonStartText;
 
         private Animator _animator;
 
         private void OnEnable()
         {
             if (gameObject.TryGetComponent(out Animator animator)) _animator = animator;
-            
+
             Actions.LevelFinished += OnLevelFinished;
+            Actions.LevelFailed += OnLevelFailed;
         }
 
         private void OnDisable()
         {
             Actions.LevelFinished -= OnLevelFinished;
+            Actions.LevelFailed -= OnLevelFailed;
         }
 
         private void Start()
@@ -41,6 +45,13 @@ namespace Game_Management
 
         private void OnLevelFinished()
         {
+            _buttonStartText.text = "NEXT LEVEL";
+            GameUIAnimation(false);
+        }
+        
+        private void OnLevelFailed()
+        {
+            _buttonStartText.text = "RESTART";
             GameUIAnimation(false);
         }
 
@@ -85,7 +96,8 @@ namespace Game_Management
 
         private void SetButtons()
         {
-            buttonGameStart.onClick.AddListener(() => LevelStart());
+            if (buttonStart.transform.GetChild(0).TryGetComponent(out TMP_Text text)) _buttonStartText = text;
+            buttonStart.onClick.AddListener(() => LevelStart());
             buttonAudio.onClick.AddListener(ChangeAudioMod);
         }
     }

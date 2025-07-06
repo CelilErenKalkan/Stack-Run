@@ -188,7 +188,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAY
+  m_text: START
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 32
   m_VerticalAlignment: 8192
   m_textAlignment: 65535
-  m_characterSpacing: -13
+  m_characterSpacing: -5
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -471,7 +471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5dd1f0b4ebbc9e48a3bca5286f677fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonGameStart: {fileID: 3103470174004907753}
+  buttonStart: {fileID: 3103470174004907753}
   buttonAudio: {fileID: 4695244546426571668}
 --- !u!1 &4695244546426571669
 GameObject:

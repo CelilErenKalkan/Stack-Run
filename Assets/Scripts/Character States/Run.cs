@@ -19,11 +19,14 @@ public class Run : State
     public override void Update()
     {
 
-        if (Controller.IsNearFinishLine())
+        if (Controller.IsFalling() && GameManager.Instance.isLevelStarted)
         {
-            Debug.Log("inside if");
-            nextState = new Dance(anim, Controller);
+            Actions.LevelFailed?.Invoke();
+        }
+        else if (Controller.IsNearFinishLine())
+        {
             Actions.LevelFinished?.Invoke();
+            nextState = new Dance(anim, Controller);
             stage = EVENT.EXIT;
         }
         else
@@ -32,7 +35,6 @@ public class Run : State
 
     public override void Exit()
     {
-        Debug.Log("exiting run");
         anim.ResetTrigger("isRunning");
         base.Exit();
     }

@@ -30,12 +30,14 @@ public class GameManager : MonoBehaviour
     {
         Actions.LevelStarted += OnLevelStarted;
         Actions.LevelFinished += OnLevelFinished;
+        Actions.LevelFailed += OnLevelFailed;
     }
 
     private void OnDisable()
     {
         Actions.LevelStarted -= OnLevelStarted;
         Actions.LevelFinished -= OnLevelFinished;
+        Actions.LevelFailed -= OnLevelFailed;
     }
 
     private void Update()
@@ -46,21 +48,40 @@ public class GameManager : MonoBehaviour
 
     private void OnLevelStarted()
     {
-        isLevelStarted = true;
         if (chibi == null)
             SpawnChibi();
+        else
+        {
+            Pool.Instance.DeactivateObject(chibi, PoolItemType.Chibi);
+            SpawnChibi();
+        }
+        
+        isLevelStarted = true;
     }
     
     private void OnLevelFinished()
     {
         isLevelStarted = false;
-        GridManager.UpdateLevelEnd();
+        GridManager.UpdateLevelEnd(true);
+        UpdateFollowTarget(Vector3.zero, 0f);
+    }
+
+    private void OnLevelFailed()
+    {
+        isLevelStarted = false;
+        GridManager.UpdateLevelEnd(false);
         UpdateFollowTarget(Vector3.zero, 0f);
     }
 
     private void SpawnChibi()
     {
         chibi = Pool.Instance.SpawnObject(new Vector3(0f, 0.2f, 0f), PoolItemType.Chibi, null);
+        if (chibi.TryGetComponent(out Rigidbody rigidbody))
+        {
+            rigidbody.useGravity = false;
+            rigidbody.useGravity = true;
+            rigidbody.velocity = Vector3.zero;
+        }
     }
     
     public void SetFinishLine(Transform newFinishLine)
