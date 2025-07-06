@@ -423,7 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardSpeed: 1.2
-  followSpeed: 5
+  followSpeed: 8
   finishDistanceThreshold: 0.25
 --- !u!54 &390314183494177263
 Rigidbody:

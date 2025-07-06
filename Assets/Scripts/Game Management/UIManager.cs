@@ -44,11 +44,13 @@ namespace Game_Management
         {
             score++;
             scoreText.text = score + "!";
-            _animator.Play("NewScore");
+            if (score > 0)
+                _animator.Play("NewScore");
         }
 
         private void LevelStart()
         {
+            score = -1;
             Actions.ButtonPush?.Invoke();
             Actions.LevelStarted?.Invoke();
             levelText.text = "Level " + DataManager.gameData.levelNo;
