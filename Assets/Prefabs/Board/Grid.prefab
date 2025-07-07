@@ -129,8 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveRange: 4
-  moveDuration: 1.65
-  matchThreshold: 0.3
+  moveDuration: 1.8
+  matchThreshold: 0.22
 --- !u!114 &3428982173665692527
 MonoBehaviour:
   m_ObjectHideFlags: 0

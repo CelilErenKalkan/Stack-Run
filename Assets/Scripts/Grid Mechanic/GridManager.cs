@@ -8,7 +8,7 @@ namespace Grid_Mechanic
     public static class GridManager
     {
         private static float zStackInterval = 1.0f;
-        private static float perfectMatchTolerance = 0.1f;
+        private static float perfectMatchTolerance = 0.15f;
         private static int gridCount = 0;
 
         private static List<GridData> currentLevel = new List<GridData>();

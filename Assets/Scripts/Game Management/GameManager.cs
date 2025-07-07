@@ -86,7 +86,6 @@ namespace Game_Management
             // Reset physics properties if Rigidbody exists
             if (chibi.TryGetComponent(out Rigidbody rigidbody))
             {
-                
                 rigidbody.velocity = Vector3.zero;
             }
         }
