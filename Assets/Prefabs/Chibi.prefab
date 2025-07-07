@@ -424,7 +424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardSpeed: 1.2
   followSpeed: 8
-  finishDistanceThreshold: 0.25
+  finishDistanceThreshold: 0.5
 --- !u!54 &390314183494177263
 Rigidbody:
   m_ObjectHideFlags: 0

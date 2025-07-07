@@ -8,9 +8,13 @@ namespace Audio
 {
     public class AudioManager : MonoBehaviour
     {
+        // References
         private Pool _pool;
+
+        // Audio Clips
         public List<AudioClip> soundList;
 
+        // Pitch Settings
         private int _perfectStreak = 0;
         private float _basePitch = 1f;
         private float _pitchIncreasePerPerfect = 0.1f;
@@ -48,14 +52,14 @@ namespace Audio
 
         private void OnGameStart()
         {
-            _perfectStreak = 0; // Reset streak on level start
+            _perfectStreak = 0;
             PlaySound(1, _basePitch);
         }
 
         private void OnStandardNote()
         {
-            _perfectStreak = 0; // Reset streak
-            var gridSoundIndex = Random.Range(0, 5);
+            _perfectStreak = 0;
+            int gridSoundIndex = Random.Range(0, 5);
             PlaySound(gridSoundIndex + 1, _basePitch);
         }
 
@@ -70,7 +74,7 @@ namespace Audio
         {
             PlaySound(7, _basePitch);
         }
-        
+
         private void OnLevelFailed()
         {
             PlaySound(8, _basePitch);
@@ -82,6 +86,7 @@ namespace Audio
 
             float time = soundList[index].length + 0.1f;
             var audioObject = _pool.SpawnObject(transform.position, PoolItemType.AudioSource, null, time);
+
             if (audioObject.TryGetComponent(out AudioSource audioSource))
             {
                 audioSource.pitch = pitch / Time.timeScale;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Data_Management
 {
-    [System.Serializable]
+    [Serializable]
     public struct GridData
     {
         public float x;
@@ -19,22 +19,18 @@ namespace Data_Management
         }
     }
 
-    [Serializable] // Required for JSON serialization
+    [Serializable] // Enables JSON serialization
     public struct GameData
     {
-        // Public fields or properties to be serialized
-        
         public int levelNo;
         public bool isMuted;
 
-        // Constructor with default values
         public GameData(int levelNo = 1, bool isMuted = false)
         {
             this.levelNo = levelNo;
             this.isMuted = isMuted;
         }
     }
-
 
     public static class DataManager
     {
@@ -43,6 +39,9 @@ namespace Data_Management
 
         public static int GetLevel => gameData.levelNo;
 
+        /// <summary>
+        /// Saves current level data, increments level number, and writes to disk.
+        /// </summary>
         public static void SaveOnLevelEnd(List<GridData> currentLevel)
         {
             previousLevel = currentLevel;
@@ -51,28 +50,25 @@ namespace Data_Management
             SaveData();
         }
 
-        #region Data Management
-
         /// <summary>
-        /// Loads all the data from the files with error handling.
+        /// Loads player progression and audio preferences from disk.
         /// </summary>
         public static void LoadData()
         {
             try
             {
                 gameData = FileHandler.ReadFromJson<GameData>("GameData.json");
-                SaveData();
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to load data: {ex.Message}");
-                gameData = new GameData();
-                SaveData();
+                gameData = new GameData(); // Fall back to defaults
+                SaveData(); // Save the default state
             }
         }
 
         /// <summary>
-        /// Saves all the data to the files with error handling.
+        /// Saves player progression and audio preferences to disk.
         /// </summary>
         public static void SaveData()
         {
@@ -86,10 +82,9 @@ namespace Data_Management
             }
         }
 
-        #endregion
-
-        #region Level Management
-
+        /// <summary>
+        /// Saves the level structure (grid layout) to disk.
+        /// </summary>
         private static void SaveLevelOrder()
         {
             try
@@ -102,6 +97,9 @@ namespace Data_Management
             }
         }
 
+        /// <summary>
+        /// Loads the last level's structure from disk.
+        /// </summary>
         public static void LoadLevelOrder()
         {
             try
@@ -111,10 +109,8 @@ namespace Data_Management
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to load previous level: {ex.Message}");
-                previousLevel = new List<GridData>(); // Initialize empty list in case of failure.
+                previousLevel = new List<GridData>(); // Fallback to prevent null reference
             }
         }
-
-        #endregion
     }
 }

@@ -17,8 +17,9 @@ namespace Grid_Mechanic
 
         private Tween colorTween;
 
+        // Tracks the current material index assigned to this grid
         public int AssignedMaterialIndex { get; private set; } = -1;
-
+        
         public void AssignRandomMaterial()
         {
             if (materialOptions == null || materialOptions.Count == 0)
@@ -30,7 +31,7 @@ namespace Grid_Mechanic
             AssignedMaterialIndex = Random.Range(0, materialOptions.Count);
             SetMaterialByIndex(AssignedMaterialIndex);
         }
-
+        
         public void SetMaterialByIndex(int index)
         {
             if (materialOptions == null || index < 0)
@@ -39,7 +40,7 @@ namespace Grid_Mechanic
             AssignedMaterialIndex = index % materialOptions.Count;
             gridRenderer.material = materialOptions[AssignedMaterialIndex];
         }
-
+        
         public void AnimateEmission(bool glow)
         {
             if (gridRenderer == null || !gridRenderer.material.HasProperty("_EmissionColor"))
@@ -47,16 +48,17 @@ namespace Grid_Mechanic
 
             Color targetColor = glow ? Color.white * emissionIntensity : Color.black;
 
+            // Kill any existing emission tween before starting a new one
             colorTween?.Kill();
+
             colorTween = DOTween.To(
                 () => gridRenderer.material.GetColor("_EmissionColor"),
                 c => gridRenderer.material.SetColor("_EmissionColor", c),
                 targetColor,
                 emissionDuration
-            ).SetLoops(glow ? 2 : 1, LoopType.Yoyo);
+            ).SetLoops(glow ? 2 : 1, LoopType.Yoyo); // Ping-pong the glow effect if glowing
         }
-        
-        
+
         private void OnEnable()
         {
             Actions.ResetAllGrids += ResetGrid;
@@ -66,7 +68,7 @@ namespace Grid_Mechanic
         {
             Actions.ResetAllGrids -= ResetGrid;
         }
-
+        
         private void ResetGrid()
         {
             Pool.Instance.DeactivateObject(gameObject, PoolItemType.Grid);

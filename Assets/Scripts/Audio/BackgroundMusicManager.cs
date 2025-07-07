@@ -20,19 +20,19 @@ namespace Audio
 
             SetAudioMod(DataManager.gameData.isMuted);
         }
-        
+
         private void OnDisable()
         {
             Actions.AudioChanged -= SetAudioMod;
             Actions.LevelStarted -= PlayInGameMusic;
-            Actions.LevelFinished -= PlayMainMenuMusic;
+            Actions.LevelFinished -= PlaySuccessMusic;
         }
-        
+
         private void Start()
         {
             PlayMainMenuMusic();
         }
-        
+
         private void SetAudioMod(bool isMuted)
         {
             audioSource.volume = isMuted ? 0 : volume;
@@ -51,7 +51,7 @@ namespace Audio
             audioSource.clip = musicClip[0];
             audioSource.Play();
         }
-        
+
         private void PlaySuccessMusic()
         {
             audioSource.pitch = 1f / Time.timeScale;

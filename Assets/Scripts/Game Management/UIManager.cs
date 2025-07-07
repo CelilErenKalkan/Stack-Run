@@ -10,18 +10,20 @@ namespace Game_Management
     {
         public Button buttonStart, buttonAudio;
 
+        public TMP_Text levelText, scoreText;
+
         private Image _audioButtonImage;
         private Sprite _mute, _unmute;
         private TMP_Text _buttonStartText;
-        public TMP_Text levelText, scoreText;
-
-        private int score = 0;
 
         private Animator _animator;
 
+        private int score = 0;
+
         private void OnEnable()
         {
-            if (gameObject.TryGetComponent(out Animator animator)) _animator = animator;
+            if (gameObject.TryGetComponent(out Animator animator))
+                _animator = animator;
 
             Actions.LevelFinished += OnLevelFinished;
             Actions.LevelFailed += OnLevelFailed;
@@ -40,6 +42,9 @@ namespace Game_Management
             SetButtons();
         }
 
+        /// <summary>
+        /// Increases score and triggers score animation.
+        /// </summary>
         private void NewScore(GameObject grid)
         {
             score++;
@@ -48,30 +53,43 @@ namespace Game_Management
                 _animator.Play("NewScore");
         }
 
+        /// <summary>
+        /// Starts the level, resets score and triggers animations.
+        /// </summary>
         private void LevelStart()
         {
             score = -1;
             Actions.ButtonPush?.Invoke();
             Actions.LevelStarted?.Invoke();
+
             levelText.text = "Level " + DataManager.gameData.levelNo;
             GameUIAnimation(true);
         }
 
+        /// <summary>
+        /// Called when level is finished successfully.
+        /// </summary>
         private void OnLevelFinished()
         {
             _buttonStartText.text = "NEXT LEVEL";
             GameUIAnimation(false);
         }
-        
+
+        /// <summary>
+        /// Called when the level fails.
+        /// </summary>
         private void OnLevelFailed()
         {
             _buttonStartText.text = "RESTART";
             GameUIAnimation(false);
         }
 
+        /// <summary>
+        /// Plays UI animation with a delay depending on game state.
+        /// </summary>
         private void GameUIAnimation(bool isStarting)
         {
-            StartCoroutine(delayedCallForUI(isStarting? 0.1f : 3.0f));
+            StartCoroutine(delayedCallForUI(isStarting ? 0.1f : 3.0f));
 
             IEnumerator delayedCallForUI(float time)
             {
@@ -80,6 +98,9 @@ namespace Game_Management
             }
         }
 
+        /// <summary>
+        /// Toggles mute/unmute and saves preference.
+        /// </summary>
         private void ChangeAudioMod()
         {
             Actions.ButtonPush?.Invoke();
@@ -87,6 +108,9 @@ namespace Game_Management
             SetAudio();
         }
 
+        /// <summary>
+        /// Updates audio icon and triggers audio state change event.
+        /// </summary>
         private void SetAudio()
         {
             _audioButtonImage.sprite = DataManager.gameData.isMuted ? _mute : _unmute;
@@ -94,6 +118,9 @@ namespace Game_Management
             DataManager.SaveData();
         }
 
+        /// <summary>
+        /// Loads audio icons and sets current audio state.
+        /// </summary>
         private void SetSprites()
         {
             _mute = Resources.Load<Sprite>("UI/ui_icon_main_menu_mute");
@@ -108,10 +135,15 @@ namespace Game_Management
             SetAudio();
         }
 
+        /// <summary>
+        /// Sets up button click listeners and text references.
+        /// </summary>
         private void SetButtons()
         {
-            if (buttonStart.transform.GetChild(0).TryGetComponent(out TMP_Text text)) _buttonStartText = text;
-            buttonStart.onClick.AddListener(() => LevelStart());
+            if (buttonStart.transform.GetChild(0).TryGetComponent(out TMP_Text text))
+                _buttonStartText = text;
+
+            buttonStart.onClick.AddListener(LevelStart);
             buttonAudio.onClick.AddListener(ChangeAudioMod);
         }
     }
